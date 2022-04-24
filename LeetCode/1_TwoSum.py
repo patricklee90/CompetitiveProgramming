@@ -32,7 +32,7 @@ class Solution(object):
                     return [id, hashMap[target-number]]
 
     # HashMap - Best
-    def twoSumHM2(self, nums: list[int], target:int) -> list[int]:
+    def twoSumHM2(self, nums: list, target:int) -> list:
         prevMap = {}
 
         for id, number in enumerate(nums):

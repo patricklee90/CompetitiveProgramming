@@ -5,6 +5,9 @@ Solution Explanation:
 '''
 from multiprocessing import pool
 import copy
+import sys
+
+sys.setrecursionlimit(10000)
 
 class Solution(object):
 
@@ -226,24 +229,67 @@ class Solution(object):
             d += f"{s}"
             print(d)
 
+    def youtubeAnswer(self, funScore, direction):
+        '''
+            let f(x) be the total amount of fun we can have in the subtree rooted at X
+            let C = [f(C) for C in children(X)]
+            f(X) = max(C[0],V[x]) + sum(other C)
+        '''
+        def checking(x, C, F):
+            if(len(C[x])== 0):
+                return funScore[x]
+            else:
+                CS = []
+                for c in C[x]:
+                    CS.append(checking(c,C,F))
+                CS.sort()
+
+                ans = max(funScore[x], CS[0])
+
+                for i,value in enumerate(CS):
+                    ans += value
+
+                return ans
+
+        n = len(direction)
+        funScore.insert(0,0)
+        direction.insert(0,0)
+        
+        print(funScore)
+        print(direction)
+
+        
+        C = []
+
+        for i in range(n+1):
+            C.append([])
+
+        print(C)
+        for i in range(n+1):
+            # print(i, direction[i])
+            C[direction[i]].append(i)
+            # print(C[direction[i]])
+        print("stuck",C)
+        answer = checking(0, C, funScore)
+        print("answer",answer)
 
 chains = [
             [
                 [60,20,40,50],
                 [0,1,1,2]
             ],
-            [
-                [3,2,1,4,5],
-                [0,1,1,1,0]
-            ],
-            [
-                [100,100,100,90,80,100,90,100],
-                [0,1,2,1,2,3,1,3]
-            ],
+            # [
+            #     [3,2,1,4,5],
+            #     [0,1,1,1,0]
+            # ],
+            # [
+            #     [100,100,100,90,80,100,90,100],
+            #     [0,1,2,1,2,3,1,3]
+            # ],
         ]
 
 solution = Solution()
 
 for id, chain in enumerate(chains):
     print(f'Case #{id+1}:',end = ' ')
-    solution.chainReaction2(chain[0],chain[1])
+    solution.youtubeAnswer(chain[0],chain[1])
